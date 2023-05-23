@@ -4,7 +4,7 @@ const Reports = () => {
   return (
     <div className="border shadow-sm ">
       <div className="border bg-primary text-white shadow-sm">Reports</div>
-      <div>
+      <div className="text-center">
         <ul className="navbar-nav">
           <li className="  text-secondary">
             <Link className="nav-link" to="/ConsolidatedReport">

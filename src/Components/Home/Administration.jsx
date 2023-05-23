@@ -6,7 +6,7 @@ const Administration = () => {
       <div className="border bg-primary text-white shadow-sm">
         Administration
       </div>
-      <div className="">
+      <div className="text-center">
         <ul className="navbar-nav">
           <li className="nav-item  text-secondary">
             <Link className="nav-link" to="/PrintChart">

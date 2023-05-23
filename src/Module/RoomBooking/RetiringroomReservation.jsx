@@ -1,41 +1,143 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "../../layouts/header";
 import Footer from "../../layouts/Footer";
 import User from "../../Components/Home/UserProfile";
-import TextField from "@mui/material/TextField";
-const Test = () => {
+import { TextField, MenuItem, Typography, Checkbox } from "@mui/material";
+import { useTable } from "react-table";
+import { MdOutlineCurrencyRupee } from "react-icons/md";
+
+const RoomReservation = () => {
   const location = useLocation();
   const reservationStation = location.state.reservationStation;
-  const reservationStationString = reservationStation.split(",");
-  // console.log(reservationStationString[0].trim());
-  const reservationStationName = reservationStationString[0].trim();
-  // console.log(reservationStationString[1].trim());
-  const reservationStationCode = reservationStationString[1].trim();
+  // console.log(reservationStation[1]);
+  const tableColumn = [
+    {
+      Header: "Action",
+      accessor: "action",
+      Cell: ({ row }) => <Checkbox checkedIcon={<MdOutlineCurrencyRupee />} />,
+    },
+    {
+      Header: "RoomNo",
+      accessor: "roomNo",
+    },
+    {
+      Header: "BedType",
+      accessor: "bedType",
+    },
+    {
+      Header: "Amenities",
+      accessor: "amenities",
+    },
+
+    {
+      Header: "RoomType",
+      accessor: "roomType",
+    },
+    {
+      Header: "Duration",
+      accessor: "duration",
+    },
+    {
+      Header: "TotalTarrif",
+      accessor: "totaltarrif",
+      Cell: ({ row }) => `${row.values.totaltarrif}`,
+    },
+    {
+      Header: "ExtraBedCharge",
+      accessor: "extrabedcharge",
+    },
+    {
+      Header: "CheckIn",
+      accessor: "checkinTime",
+    },
+    {
+      Header: "CheckOut",
+      accessor: "checkoutTime",
+    },
+  ];
+
+  const reservationStationName = reservationStation[1];
+  const reservationStationCode = reservationStation[0];
   const TravelAuthority = location.state.TravelAuthority;
   const PNRNumber = location.state.PNRNumber;
   const PNRResponse = location.state.PNRResponse;
-  const [getQuota, setQuota] = useState();
-  const [getBedType, setBedType] = useState();
+  const [getQuota, setQuota] = useState("GN");
+  const [getBedType, setBedType] = useState("Dormitory");
   const [getAc, setAc] = useState();
   const [getCheckInDate, setCheckInDate] = useState();
   const [getCheckOutDate, setCheckOutDate] = useState();
   const [getRoomAvailability, setRoomAvailability] = useState([]);
   const [showTable, setShowTable] = useState(false);
   const [error, setError] = useState();
+  const quota = [
+    {
+      value: "GN",
+      label: "GN",
+    },
+    {
+      value: "LD",
+      label: "LD",
+    },
+    {
+      value: "HQ/VIP",
+      label: "HQ/VIP",
+    },
+    {
+      value: "GM",
+      label: "GM",
+    },
+    {
+      value: "HP",
+      label: "HP",
+    },
+  ];
+  const bedType = [
+    {
+      value: "All",
+      label: "All",
+    },
+    {
+      value: "Single",
+      label: "Single",
+    },
+    {
+      value: "Double",
+      label: "Double",
+    },
+    {
+      value: "Dormitory",
+      label: "Dormitory",
+    },
+    {
+      value: "Family",
+      label: "Family",
+    },
+  ];
+  const ac = [
+    {
+      value: "With AC",
+      label: "With AC",
+    },
+    {
+      value: "Non AC",
+      label: "Non AC",
+    },
+  ];
   const CheckRoomAvailability = () => {
-    alert(getCheckInDate);
+    alert("getCheckInDate");
+
     setShowTable(true);
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     var raw = JSON.stringify({
-      stationCode: 5717,
-      checkInTime: "2023-05-16 20:00:00",
-      checkOutTime: "2023-05-17 20:00:00",
-      bookingType: "all",
+      stationCode: 5409,
+      checkInTime: "2023-05-22 20:00:00",
+      checkOutTime: "2023-05-23 20:00:00",
+      bookingType: "dormitory",
       travelAutho: "other",
-      travelAuthoId: "2521994982",
+      travelAuthoId: "6514585468",
     });
 
     var requestOptions = {
@@ -66,52 +168,106 @@ const Test = () => {
       CheckRoomAvailability;
     };
   }, []);
+  const columns = useMemo(() => tableColumn, []);
+  const data = useMemo(() => getRoomAvailability, []);
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    useTable({
+      columns,
+      data,
+    });
   return (
     <>
       {/* This is Test Page {reservationStation} {TravelAuthority} */}
-      {PNRNumber}
+      {/* {PNRNumber} */}
       {/* {PNRResponse.dateOfJourney} */}
       {/* {PNRResponse.arrivalDate} */}
       {/* {PNRResponse.trainNumber} */}
       {/* {PNRResponse.sourceStation} */}
       {/* {PNRResponse.destinationStation} */}
-      {reservationStationName},{reservationStationCode}
+      {/* {reservationStationName},{reservationStationCode} */}
       <Header />
       <User />
-      <div className="container border shadow">
-        <div className="row border">
-          <h5 className="bg-primary text-white p-1">
+      <div className="container-fluid border shadow">
+        <div className="row align-item-center ">
+          <h5 className="bg-primary text-center text-white p-1">
             Retiringroom Reservation
           </h5>
         </div>
-        <div className="row justify-content-center p-3">
-          <div className="col-6">Travel Authority:{TravelAuthority}</div>
-          <div className="col-6">
-            Quota :
-            <select value={getQuota} onChange={(e) => setQuota(e.target.value)}>
-              <option value="GN">GN</option>
-              <option value="LD">LD</option>
-              <option value="HQ/VIP">HQ/VIP</option>
-              <option value="GM">GM</option>
-              <option value="HP">HP</option>
-            </select>
-          </div>
-        </div>
-        <div className="row justify-content-center border p-3">
-          <div className="col-2">PNR No :{PNRNumber}</div>
-          <div className="col-2">
-            Source Station:{PNRResponse.sourceStation}
-          </div>
-          <div className="col-2">
-            Destination Station: {PNRResponse.destinationStation}
-          </div>
-          <div className="col-2">Depature Date:{PNRResponse.dateOfJourney}</div>
-          <div className="col-2">Arrival Date:{PNRResponse.arrivalDate}</div>
-          <div className="col-2">Train No:{PNRResponse.trainNumber}</div>
-        </div>
-        <div className="row justify-content-center p-3">
+        <div className="row justify-content-center p-3 ">
           <div className="col-3">
-            Reservation Station :{reservationStationName}
+            <span className="text-dark">Travel Authority :</span>
+            <h5 className="text-dark"> {TravelAuthority}</h5>
+          </div>
+          <div className="col-3">
+            <TextField
+              variant="outlined"
+              id="outlined-read-only-input"
+              label="PNR No"
+              defaultValue={PNRNumber}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </div>
+          <div className="col-3">
+            <TextField
+              variant="standard"
+              id="outlined-read-only-input"
+              label="Train No"
+              defaultValue={PNRResponse.trainNumber}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </div>
+          <div className="col-3">
+            <TextField
+              variant="outlined"
+              id="outlined-read-only-input"
+              label=" Train Name"
+              defaultValue={PNRResponse.trainName}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </div>
+        </div>
+        <div className="row justify-content-center  p-3">
+          <div className="col-3">
+            <TextField
+              variant="filled"
+              id="outlined-read-only-input"
+              label=" Source Station"
+              defaultValue={PNRResponse.sourceStation}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </div>
+          <div className="col-3">
+            <TextField
+              variant="filled"
+              id="outlined-read-only-input"
+              label=" Destination Station"
+              defaultValue={PNRResponse.destinationStation}
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          </div>
+          <div className="col-3">
+            <Typography>Depature Date</Typography>
+            {PNRResponse.dateOfJourney}
+          </div>
+          <div className="col-3">
+            <Typography>Arrival Date</Typography>
+            {PNRResponse.arrivalDate}
+          </div>
+        </div>
+        <div className="row  p-3">
+          <div className="col-3">
+            <span> Reservation Station </span>
+            <h5>{reservationStationName}</h5>
           </div>
           <div className="col-3">
             Reservation From Date
@@ -146,67 +302,100 @@ const Test = () => {
             />
           </div>
         </div>
-        <div className="row justify-content-center border p-3">
-          <div className="col-6">
-            Bed Type:
-            <select
+        <div className="row   p-3">
+          <div className="col-3">
+            <TextField
+              id="standard-select-currency"
+              select
+              label="Bed Type"
+              defaultValue="Dormitory"
+              helperText="Please select Bed Type"
+              variant="standard"
               value={getBedType}
               onChange={(e) => setBedType(e.target.value)}
             >
-              <option value="Dormitory">Dormitory</option>
-              <option value="Double">Double</option>
-              <option value="Single">Single</option>
-              <option value="Family">Family</option>
-              <option value="All">All</option>
-            </select>
+              {bedType.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
           </div>
-          <div className="col-6">
-            AC Type Status :
-            <select value={getAc} onChange={(e) => setAc(e.target.value)}>
-              <option value="With AC">With AC</option>
-              <option value="Non AC">Non AC</option>
-            </select>
+          <div className="col-3">
+            <TextField
+              id="standard-select-currency"
+              select
+              label=" AC Type Status"
+              defaultValue="With AC"
+              helperText="Please select AC Type"
+              variant="standard"
+              value={getAc}
+              onChange={(e) => setAc(e.target.value)}
+            >
+              {ac.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </div>
+          <div className="col-3">
+            <TextField
+              id="standard-select-currency"
+              select
+              label="Quota"
+              defaultValue="GN"
+              helperText="Please select Quota"
+              variant="standard"
+              value={getQuota}
+              onChange={(e) => setQuota(e.target.value)}
+            >
+              {quota.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
           </div>
         </div>
         <div className="row justify-content-center my-2 p-3">
-          <div className="col-12">
-            <button className="btn btn-primary" onClick={CheckRoomAvailability}>
+          <div className="col-12 text-center">
+            <button
+              className="btn btn-primary my-3 "
+              onClick={CheckRoomAvailability}
+            >
               Check Room Availability
             </button>
 
             {showTable && (
-              <table className="table">
+              <table
+                className="table table-striped table-hover"
+                {...getTableProps()}
+              >
                 <thead>
-                  <tr>
-                    <th>Select</th>
-                    <th>Room No</th>
-                    <th>Bed Type</th>
-                    <th>Room Feature</th>
-                    <th>Room Type</th>
-                    <th>Duration</th>
-                    <th>Tarrif</th>
-                    <th>Extra Bed</th>
-                    <th>Check In Time</th>
-                    <th>Check Out Time</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {getRoomAvailability.map((item, index) => (
-                    <tr key={index}>
-                      <td>
-                        <input key={index} type="checkbox" />
-                      </td>
-                      <td>{item.roomNo}</td>
-                      <td>{item.bedType}</td>
-                      <td>{item.amenities}</td>
-                      <td>{item.roomType}</td>
-                      <td>{item.duration}</td>
-                      <td>{item.totaltarrif}</td>
-                      <td>{item.extrabedcharge}</td>
-                      <td>{item.checkinTime}</td>
-                      <td>{item.checkoutTime}</td>
+                  {headerGroups.map((headerGroup) => (
+                    <tr {...headerGroup.getHeaderGroupProps()}>
+                      {headerGroup.headers.map((column) => (
+                        <th {...column.getHeaderProps()}>
+                          {column.render("Header")}
+                        </th>
+                      ))}
                     </tr>
                   ))}
+                </thead>
+                <tbody {...getTableBodyProps()}>
+                  {rows.map((row, i) => {
+                    prepareRow(row);
+                    return (
+                      <tr {...row.getRowProps()}>
+                        {row.cells.map((cell) => (
+                          <td {...cell.getCellProps()}>
+                            {cell.render("Cell")}
+                          </td>
+                        ))}
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             )}
@@ -218,4 +407,4 @@ const Test = () => {
   );
 };
 
-export default Test;
+export default RoomReservation;

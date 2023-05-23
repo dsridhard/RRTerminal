@@ -8,46 +8,35 @@ import Reports from "../Components/Home/Reports";
 import Footer from "../layouts/Footer";
 import Header from "../layouts/header";
 import User from "../Components/Home/UserProfile";
-import Box from "@mui/material/Box";
 const MenuPage = () => {
   return (
-    <div className="container">
-      <div className="row">
-        <Header />
-      </div>
-      <div className="row">
-        <User />
-      </div>
-      <div className="row border p-5">
-        <div className="col-3 my-3 text-white">
-          <div className="bg-primary">1</div>
+    <>
+      <Header />
+      <div className="container">
+        <div className="row">
+          <User />
         </div>
-        <div className="col-3 my-3 text-white">
-          <div className="bg-primary">1</div>
+        <div className="row border p-1">
+          <div className="col">
+            <CreateMaster />
+          </div>
+          <div className="col">
+            <RoomBooking />
+            <RoomCancellation />
+          </div>
+          <div className="col">
+            <Reports />
+          </div>
+          <div className="col">
+            <Administration />
+            <GST />
+          </div>
         </div>
-        <div className="col-3 my-3 text-white">
-          <div className="bg-primary">1</div>
-        </div>
-        <div className="col-3 my-3 text-white">
-          <div className="bg-primary">1</div>
-        </div>
-        <div className="col-3 my-3 text-white">
-          <div className="bg-primary">1</div>
-        </div>
-        <div className="col-3 my-3 text-white">
-          <div className="bg-primary">1</div>
-        </div>
-        <div className="col-3 my-3 text-white">
-          <div className="bg-primary">1</div>
-        </div>
-        <div className="col-3 my-3 text-white">
-          <div className="bg-primary">1</div>
+        <div className="row">
+          <Footer />
         </div>
       </div>
-      <div className="row">
-        <Footer />
-      </div>
-    </div>
+    </>
   );
 };
 

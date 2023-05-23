@@ -3,7 +3,7 @@ import MenuPage from "./MenuPage";
 import LoginPage from "./LoginPage";
 const HomePage = () => {
   const LoggedUser = sessionStorage.getItem("username");
-  console.log(LoggedUser);
+  // console.log(LoggedUser);
   return (
     <>
       <LoginPage />
